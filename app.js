@@ -1,6 +1,8 @@
 const express = require("express");
 const { ApolloServer } = require("apollo-server-express");
 const { connect } = require("mongoose");
+const { typeDefs } = require("./graphql/schema");
+const { resolvers } = require("./graphql/resolvers");
 
 const app = express();
 
@@ -36,6 +38,31 @@ const connectDB = async () => {
     .catch((err) => console.error(err));
 };
 
-connectDB();
+async function startServer() {
+  server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    context: ({ req }) => ({
+      userId: req.userId,
+      isAuth: req.isAuth,
+    }),
+  });
+
+  await server.start();
+  await server.applyMiddleware({ app });
+
+  app.listen(PORT, () => {
+    console.log("Server Running on " + PORT);
+    console.log(`gql path is  http://localhost:${PORT}${server.graphqlPath}`);
+  });
+}
+
+connectDB()
+  .then(() => {
+    startServer();
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
 module.exports = app;
