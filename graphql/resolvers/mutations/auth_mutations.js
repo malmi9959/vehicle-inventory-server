@@ -1,7 +1,10 @@
+require("dotenv").config();
 const { User } = require("../../../models/user");
 const { ApolloError } = require("apollo-server-express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+
+const SECRET_KEY = process.env.SECRET_KEY;
 
 const authMutations = {
   login: async (parent, args, context, info) => {
@@ -17,7 +20,7 @@ const authMutations = {
       }
       const token = jwt.sign(
         { userId: user.id, email: user.email },
-        "secretkey",
+        SECRET_KEY,
         {
           expiresIn: "1d",
         }

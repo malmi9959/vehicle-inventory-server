@@ -52,8 +52,10 @@ async function startServer() {
   await server.applyMiddleware({ app });
 
   app.listen(PORT, () => {
-    console.log("Server Running on " + PORT);
-    console.log(`gql path is  http://localhost:${PORT}${server.graphqlPath}`);
+    console.log("Server Running on " + `http://localhost:${PORT}`);
+    console.log(
+      `GraphQL path is  http://localhost:${PORT}${server.graphqlPath}`
+    );
   });
 }
 
