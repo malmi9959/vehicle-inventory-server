@@ -3,6 +3,7 @@ const { ApolloServer } = require("apollo-server-express");
 const { connect } = require("mongoose");
 const { typeDefs } = require("./graphql/schema");
 const { resolvers } = require("./graphql/resolvers");
+const middlewares = require("./middlewares");
 
 const app = express();
 
@@ -24,7 +25,7 @@ const PORT = process.env.PORT || 8000;
 const { DATABASE_URL } = process.env;
 
 // TODO add middleware
-// app.use(middlewares);
+app.use(middlewares);
 
 let server;
 

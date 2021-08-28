@@ -12,6 +12,22 @@ const typeDefs = gql`
     phone: String!
     address: String!
   }
+  type Vehicle {
+    _id: String!
+    reg_no: String!
+    type: String
+    brand: String
+    model: String
+    owner_name: String
+    owner_mobile: String
+    owner_address: String
+    condition: String
+    mileage: Float!
+    last_service_date: String!
+    service_period: Int!
+    image: String!
+    last_month_fuel_usage: Float!
+  }
 
   type AuthData {
     userId: ID!
@@ -40,6 +56,22 @@ const typeDefs = gql`
     address: String
   }
 
+  input VehicleInput {
+    reg_no: String!
+    type: String
+    brand: String
+    model: String
+    owner_name: String
+    owner_mobile: String
+    owner_address: String
+    condition: String
+    mileage: Float!
+    last_service_date: String!
+    service_period: Int!
+    image: String!
+    last_month_fuel_usage: Float!
+  }
+
   enum UserType {
     ADMIN
     USER
@@ -47,9 +79,12 @@ const typeDefs = gql`
 
   type Query {
     getUser: User!
+    vehicles: [Vehicle!]
+    vehicleById: Vehicle!
   }
 
   type Mutation {
+    addVehicle(input: VehicleInput!): Vehicle
     login(email: String!, password: String!): AuthData
     createUser(userInput: UserInput): User
     updateUserById(updateUserInput: UpdateUserInput): User

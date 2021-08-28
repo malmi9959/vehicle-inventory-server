@@ -5,3 +5,4 @@ db.createUser({
   roles: ["dbAdmin", "readWrite"],
 });
 db.createCollection("users");
+db.counters.insertOne({ _id: "vehicleId", sequence_value: 0 });
