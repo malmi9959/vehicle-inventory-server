@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "amd-learners",
+  "private_key_id": "a7fd21783cff03ad379b6999cf5d051380df8232",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCuYywAjdXyoB7a\nDXCI6uaOKaWuOIfHxaFQgh6mI3lR1zAboPh0RG1bKe1KP0O7mHhFc4zzdg5i2vtx\nZBhOxzcNCGTrDIhE5KWim/lKgV3COj4ic7QBjQw1T0H9l2+h5wM6k2vbf79RHwjH\n0uC95epTnloIedD2igz7BNxCAf25j4JWUip81NWtE/8YUPJV+RQFW2WJfKYdn9Ko\nG807Y/UbjvYzW9GS6Sq2ZqK2cn5fQD+o46+MCmxv2hy2PS9uPUMZuWQKQPY4qdqI\nZldrvWfyvBngy0AF4UXpBqbb0y+h3zuBJ5IKf50/eRBxTtwJ8DzfNF2EBwP0ycxs\nUGKdLFYlAgMBAAECggEAVBlcj5nXS25/4m2nz0flTzrzfU0i4itDi/VsfXfPGrJZ\nr4FWQI/9YwEZv/w5mH9DxU6f84uEDZWIvFrmxBsbx+u764T8NKlF3eE1fIJd6ny3\nGVtOPI8+i3kBHKCLA/vKGVYeJll5tM/wJpniq4H1G0VbKwpARZ02/FmQNT8LkxA/\n1DpezYm1GVWJhI2CSgTHJjqYaaDWbFhLRaMYG0jqOrJk9+lVTN78EgJ31l00Y5aq\ngU0TUXroupwONokYvd/Hsi13raQoRNVXBE/UWPHMk5hd7XWJ0Nwaneu9BtuXjz3D\nbq8iGJFX5E6+VOxCKNFhBvjxAJIJ3xjduEb1Y8ipcwKBgQDfLavaIMxmJOpPo4Yw\ngKLj/ongje3y3byTLvInpU5UJLq9baMXDwW1TDlRUC1JqaU0/I/3y+dxS5s7XCte\nGuKTTHHhYozfIn9QWt7NN29NB15VXQI1zNTF9DPrXGReQ5tL6kZid00/KZrvIJfr\nDQUsXc/SIv2tnkhz7DWfhej0xwKBgQDICJfGP+XkibusoO6Vh+0BbI8J63LmrI/L\nT0y2kpjqSH2hALwVkWzUIWZF+duDS75+dwRlGWIQp5cwvejzn+r/S1DZxa+5n1ck\nkF153FLCI0KB5A1omWGNdF1bmlHDqy3SZudV3YzEK7U2bBNALfyhWSgvPTG8WsBv\n3QAWgFBZswKBgGwHZHcqhyYuWkkAY5UYv0BTVpQev35e/MfV4pt0Ne0e9lF5P4eK\n2v1+DwSgJbvRZUm3s0yEI9zAdzyNieR8aQ5Z44nwtTXRMgVIZy641aRYm74ATnCS\nXLARXAxiZacHXKWrmjRRgU/AqOF1SnQZklZ+dnlGPLsMsg+C2BYGsNPDAoGBAMIx\n1WbZ0c21CUXmVrlEZIrlYVg4BCx9invOWKNGXr3T8mLD29T0gbrPUgLNNpaYii8s\nTE/5/II+sUDYnbcmoXWHIM7KZHbIgkk0/gq4In/my0Jeq8XIYjR5q8iqYIadQLbq\nv9tUYrxv0lUrRuUfwArEC4cQ2aAKWpg+7T7rAxaRAoGBAKgQPMZBx414Rvq1w82/\nwehQIqovYdEi+yt2TP5RWXzZ//LSDbmqgB+Mo4EM9pvm1JMekYSHS3W2qWWShngw\n9ldGpoj7TtW/YfncmpZkzojljM0YrSaxRtymvCqFCRnMIzJ13ItZsxf/ndtfyxH4\nOPChCQpJ5Q0nnb5BphR+H+AG\n-----END PRIVATE KEY-----\n",
+  "client_email": "upload-vehicle@amd-learners.iam.gserviceaccount.com",
+  "client_id": "107138406615331879877",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/upload-vehicle%40amd-learners.iam.gserviceaccount.com"
+}

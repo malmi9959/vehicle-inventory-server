@@ -1,6 +1,7 @@
-const { gql } = require("apollo-server-express");
+const { gql } = require("apollo-server");
 
 const typeDefs = gql`
+  scalar Upload
   type User {
     _id: ID!
     firstName: String!
@@ -26,7 +27,9 @@ const typeDefs = gql`
     last_service_date: String!
     service_period: Int!
     image: String!
-    last_month_fuel_usage: Float!
+    fuel_usage: [FuelUsage]!
+    createdAt: String
+    updatedAt: String
   }
 
   type AuthData {
@@ -65,11 +68,21 @@ const typeDefs = gql`
     owner_mobile: String
     owner_address: String
     condition: String
-    mileage: Float!
+    mileage: Int!
     last_service_date: String!
     service_period: Int!
-    image: String!
-    last_month_fuel_usage: Float!
+    image: Upload!
+  }
+
+  input FuelUsageInput {
+    usage: Float!
+  }
+
+  type FuelUsage {
+    updatedAt: String
+    year: Int
+    month: Int
+    usage: Float!
   }
 
   enum UserType {
@@ -80,7 +93,8 @@ const typeDefs = gql`
   type Query {
     getUser: User!
     vehicles: [Vehicle!]
-    vehicleById: Vehicle!
+    vehicleById(vehicleId: String!): Vehicle!
+    nextVehicleId: String
   }
 
   type Mutation {

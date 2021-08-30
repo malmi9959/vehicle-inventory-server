@@ -5,6 +5,9 @@ const { typeDefs } = require("./graphql/schema");
 const { resolvers } = require("./graphql/resolvers");
 const middlewares = require("./middlewares");
 
+const {
+  graphqlUploadExpress, // A Koa implementation is also exported.
+} = require("graphql-upload");
 const app = express();
 
 require("dotenv").config();
@@ -38,6 +41,8 @@ const connectDB = async () => {
     .then(() => console.log("MongodDB Connected Successfully"))
     .catch((err) => console.error(err));
 };
+
+app.use(graphqlUploadExpress());
 
 async function startServer() {
   server = new ApolloServer({

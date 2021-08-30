@@ -1,7 +1,10 @@
 const { ApolloError } = require("apollo-server-express");
+const getNextSequenceValue = require("../../../helpers/getNextSequenceValue");
 
-const { Counter } = require("../../../models/counter");
 const { Vehicle } = require("../../../models/vehicle");
+
+const { Storage } = require("@google-cloud/storage");
+const path = require("path");
 
 const vehicleMutation = {
   addVehicle: async (_, args, context) => {
@@ -18,26 +21,50 @@ const vehicleMutation = {
       last_service_date,
       service_period,
       image,
-      last_month_fuel_usage,
     } = args.input;
     const { userId, isAuth } = context;
     try {
-      if (!isAuth) {
-        throw new ApolloError("Unauthenticated!");
+      // if (!isAuth) {
+      //   throw new ApolloError("Unauthenticated!");
+      // }
+
+      const existingVehicle = await Vehicle.findOne({ reg_no: reg_no });
+      if (existingVehicle) {
+        throw new ApolloError("Vehicle already exists!");
       }
 
-      let _id;
-      var sequenceDocument = await Counter.findOneAndUpdate(
-        { _id: "vehicleId" },
-        { $inc: { sequence_value: 1 } },
-        { new: true }
+      var vehicleId = await getNextSequenceValue("vehicleId");
+
+      const removeWhiteSpaces = (name) => {
+        return name.replace(/\s+/g, "");
+      };
+
+      const bucketName = "amd-learners.appspot.com";
+      const storage = new Storage({
+        keyFilename: path.join(__dirname, "../../../amd-learners-key.json"),
+      });
+      const myBucket = storage.bucket(bucketName);
+      const { createReadStream, filename, mimetype, encoding } = await image;
+      let sanitizedName = removeWhiteSpaces(filename);
+
+      const file = myBucket.file(`vehicles/${sanitizedName}`);
+
+      await createReadStream().pipe(
+        file.createWriteStream().on("finish", () => {
+          file
+            .makePublic()
+            .then(() => {
+              console.log("images published");
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+          console.log(`/vehicles/${sanitizedName} uploaded to ${bucketName}`);
+        })
       );
-      const seq_pos = sequenceDocument.sequence_value;
-      let long_id = seq_pos.toString().padStart(3, "0");
-      _id = `VH${long_id}`;
 
       const vehicle = new Vehicle({
-        _id: _id,
+        _id: vehicleId,
         reg_no,
         type,
         brand,
@@ -49,8 +76,7 @@ const vehicleMutation = {
         mileage,
         last_service_date,
         service_period,
-        image,
-        last_month_fuel_usage,
+        image: `https://storage.googleapis.com/amd-learners.appspot.com/vehicles/${sanitizedName}`,
       });
 
       const result = await vehicle.save();
