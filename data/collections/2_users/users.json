@@ -1,0 +1,12 @@
+{
+  "_id": { "$oid": "61290933e7864da8f64d9503" },
+  "username": "admin",
+  "firstName": "Admin",
+  "lastName": "Amd Learners",
+  "email": "admin@amdlearners.com",
+  "password": "$2a$12$6DxAC6e3cgJdbDGyLYhxVe/jSVnYujSFa5hSPxWwD5wp9KXd5DaPW",
+  "phone": "0779566410",
+  "address": "Kandy, Sri Lanka",
+  "type": "ADMIN",
+  "__v": 0
+}
