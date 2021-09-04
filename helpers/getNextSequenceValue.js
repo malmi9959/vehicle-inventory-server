@@ -1,4 +1,4 @@
-const { ApolloError } = require("apollo-server-express");
+// const { ApolloError } = require("apollo-server-express");
 const { Counter } = require("../models/counter");
 
 async function getNextSequenceValue(sequenceName) {

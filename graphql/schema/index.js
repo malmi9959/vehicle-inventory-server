@@ -73,6 +73,20 @@ const typeDefs = gql`
     service_period: Int!
     image: Upload!
   }
+  input UpdateVehicleInput {
+    reg_no: String
+    type: String
+    brand: String
+    model: String
+    owner_name: String
+    owner_mobile: String
+    owner_address: String
+    condition: String
+    mileage: Int
+    last_service_date: String
+    service_period: Int
+    image: Upload
+  }
 
   input FuelUsageInput {
     usage: Float!
@@ -99,8 +113,10 @@ const typeDefs = gql`
 
   type Mutation {
     addVehicle(input: VehicleInput!): Vehicle
+    updateVehicle(id: String!, input: UpdateVehicleInput!): Vehicle
     login(email: String!, password: String!): AuthData
     createUser(userInput: UserInput): User
+    deleteVehicle(id: String!): String
     updateUserById(updateUserInput: UpdateUserInput): User
   }
 `;

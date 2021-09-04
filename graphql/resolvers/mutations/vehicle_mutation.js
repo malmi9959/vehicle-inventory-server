@@ -6,6 +6,41 @@ const { Vehicle } = require("../../../models/vehicle");
 const { Storage } = require("@google-cloud/storage");
 const path = require("path");
 
+const removeWhiteSpaces = (name) => {
+  return name.replace(/\s+/g, "");
+};
+
+function uploadImage(imageFile) {
+  return new Promise(async (resolve, reject) => {
+    const bucketName = "amd-learners-46de1.appspot.com";
+    const storage = new Storage({
+      keyFilename: path.join(__dirname, "../../../amd-learners-key.json"),
+    });
+    const myBucket = storage.bucket(bucketName);
+    const { createReadStream, filename } = await imageFile;
+    let sanitizedName = removeWhiteSpaces(filename);
+
+    const file = myBucket.file(`vehicles/${sanitizedName}`);
+
+    await createReadStream().pipe(
+      file.createWriteStream().on("finish", () => {
+        file
+          .makePublic()
+          .then(() => {
+            const imageUrl = `https://storage.googleapis.com/amd-learners-46de1.appspot.com/vehicles/${sanitizedName}`;
+            resolve(imageUrl);
+            console.log("Image published to the bucket");
+          })
+          .catch((err) => {
+            reject(err);
+            console.log(err);
+          });
+        console.log(`/vehicles/${sanitizedName} uploaded to ${bucketName}`);
+      })
+    );
+  });
+}
+
 const vehicleMutation = {
   addVehicle: async (_, args, context) => {
     const {
@@ -35,53 +70,77 @@ const vehicleMutation = {
 
       var vehicleId = await getNextSequenceValue("vehicleId");
 
-      const removeWhiteSpaces = (name) => {
-        return name.replace(/\s+/g, "");
+      const newVehicle = await uploadImage(image).then(async (imageUrl) => {
+        const vehicle = new Vehicle({
+          _id: vehicleId,
+          reg_no,
+          type,
+          brand,
+          model,
+          owner_name,
+          owner_mobile,
+          owner_address,
+          condition,
+          mileage,
+          last_service_date,
+          service_period,
+          image: imageUrl,
+        });
+
+        const result = await vehicle.save();
+
+        return result;
+      });
+
+      return newVehicle;
+    } catch (error) {
+      throw new ApolloError(error);
+    }
+  },
+  updateVehicle: async (_, args) => {
+    try {
+      const { id, input } = args;
+
+      const inputObj = {
+        ...input,
       };
 
-      const bucketName = "amd-learners.appspot.com";
-      const storage = new Storage({
-        keyFilename: path.join(__dirname, "../../../amd-learners-key.json"),
-      });
-      const myBucket = storage.bucket(bucketName);
-      const { createReadStream, filename, mimetype, encoding } = await image;
-      let sanitizedName = removeWhiteSpaces(filename);
-
-      const file = myBucket.file(`vehicles/${sanitizedName}`);
-
-      await createReadStream().pipe(
-        file.createWriteStream().on("finish", () => {
-          file
-            .makePublic()
-            .then(() => {
-              console.log("images published");
-            })
-            .catch((err) => {
-              console.log(err);
+      if (input.image) {
+        const imageUpdatedVehicle = await uploadImage(input.image).then(
+          async (imageUrl) => {
+            Object.assign(inputObj, {
+              image: imageUrl,
             });
-          console.log(`/vehicles/${sanitizedName} uploaded to ${bucketName}`);
-        })
-      );
+            const updatedVehicle = await Vehicle.findByIdAndUpdate(id, {
+              ...inputObj,
+            });
 
-      const vehicle = new Vehicle({
-        _id: vehicleId,
-        reg_no,
-        type,
-        brand,
-        model,
-        owner_name,
-        owner_mobile,
-        owner_address,
-        condition,
-        mileage,
-        last_service_date,
-        service_period,
-        image: `https://storage.googleapis.com/amd-learners.appspot.com/vehicles/${sanitizedName}`,
-      });
+            return updatedVehicle;
+          }
+        );
 
-      const result = await vehicle.save();
+        return imageUpdatedVehicle;
+      } else {
+        const updateWithoutImage = await Vehicle.findByIdAndUpdate(id, {
+          ...inputObj,
+        });
 
-      return result;
+        return updateWithoutImage;
+      }
+    } catch (error) {
+      throw new ApolloError(error);
+    }
+  },
+  deleteVehicle: async (_, args) => {
+    try {
+      const { id } = args;
+      const deletedVehicle = await Vehicle.findByIdAndDelete(id);
+
+      if (!deletedVehicle) {
+        throw new ApolloError("Vehicle ID doesn't exist!");
+      }
+
+      return `Succeffully deleted the vehicle`;
     } catch (error) {
       throw new ApolloError(error);
     }
