@@ -2,9 +2,12 @@ const { ApolloError } = require("apollo-server-express");
 const getNextSequenceValue = require("../../../helpers/getNextSequenceValue");
 
 const { Vehicle } = require("../../../models/vehicle");
+const { DateTime } = require("luxon");
 
 const { Storage } = require("@google-cloud/storage");
 const path = require("path");
+const { FuelUsage } = require("../../../models/FuelUsage");
+const { pubsub } = require("../../../helpers/pubSub");
 
 const removeWhiteSpaces = (name) => {
   return name.replace(/\s+/g, "");
@@ -57,11 +60,11 @@ const vehicleMutation = {
       service_period,
       image,
     } = args.input;
-    const { userId, isAuth } = context;
+    const { isAuth } = context;
     try {
-      // if (!isAuth) {
-      //   throw new ApolloError("Unauthenticated!");
-      // }
+      if (!isAuth) {
+        throw new ApolloError("Unauthenticated!");
+      }
 
       const existingVehicle = await Vehicle.findOne({ reg_no: reg_no });
       if (existingVehicle) {
@@ -141,6 +144,44 @@ const vehicleMutation = {
       }
 
       return `Succeffully deleted the vehicle`;
+    } catch (error) {
+      throw new ApolloError(error);
+    }
+  },
+  addFuelUsage: async (_, args) => {
+    try {
+      const { vehicleId, usage } = args.input;
+      const date = DateTime.now();
+      const year = date.toLocaleString({ year: "numeric" });
+      const lastMonth = date.toLocaleString({ month: "numeric" }) - 1;
+
+      const existingFuelUsage = await FuelUsage.findOne({
+        vehicleId: vehicleId,
+        month: lastMonth,
+        year: year,
+      });
+
+      if (existingFuelUsage) {
+        throw new ApolloError("Fuel Usage exists");
+      }
+
+      const newFuelUsage = new FuelUsage({
+        vehicleId: vehicleId,
+        month: lastMonth,
+        year: year,
+        usage: usage,
+      });
+
+      await Vehicle.findByIdAndUpdate(vehicleId, {
+        $push: { fuel_usage: newFuelUsage },
+      });
+
+      const result = newFuelUsage.save();
+      await pubsub.publish("FUEL_USAGE_CREATED", {
+        fuelUsageCreated: result,
+      });
+
+      return result;
     } catch (error) {
       throw new ApolloError(error);
     }

@@ -1,12 +1,15 @@
 const { ApolloError } = require("apollo-server-express");
 const getNextSequenceValue = require("../../../helpers/getNextSequenceValue");
 const { Counter } = require("../../../models/counter");
+const { FuelUsage } = require("../../../models/FuelUsage");
 const { Vehicle } = require("../../../models/vehicle");
 
 const vehicleQueries = {
   vehicles: async () => {
     try {
-      const vehicles = await Vehicle.find().sort({ updatedAt: -1 });
+      const vehicles = await Vehicle.find()
+        .sort({ updatedAt: -1 })
+        .populate(["fuel_usage"]);
       return vehicles;
     } catch (error) {
       throw new ApolloError(error);
@@ -26,6 +29,15 @@ const vehicleQueries = {
     try {
       const vehicle = Vehicle.findById(args.vehicleId);
       return vehicle;
+    } catch (error) {
+      throw new ApolloError(error);
+    }
+  },
+  fuelUsages: async (_, args) => {
+    try {
+      const fuelUsages = await FuelUsage.find();
+
+      return fuelUsages;
     } catch (error) {
       throw new ApolloError(error);
     }

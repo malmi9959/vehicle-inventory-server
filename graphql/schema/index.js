@@ -89,14 +89,18 @@ const typeDefs = gql`
   }
 
   input FuelUsageInput {
+    vehicleId: String!
     usage: Float!
   }
 
   type FuelUsage {
-    updatedAt: String
+    _id: ID!
     year: Int
     month: Int
     usage: Float!
+    vehicleId: String!
+    createdAt: String
+    updatedAt: String
   }
 
   enum UserType {
@@ -104,14 +108,20 @@ const typeDefs = gql`
     USER
   }
 
+  type Subscription {
+    fuelUsageCreated: FuelUsage
+  }
+
   type Query {
     getUser: User!
     vehicles: [Vehicle!]
     vehicleById(vehicleId: String!): Vehicle!
     nextVehicleId: String
+    fuelUsages(vehicleId: String): [FuelUsage]
   }
 
   type Mutation {
+    addFuelUsage(input: FuelUsageInput!): FuelUsage
     addVehicle(input: VehicleInput!): Vehicle
     updateVehicle(id: String!, input: UpdateVehicleInput!): Vehicle
     login(email: String!, password: String!): AuthData

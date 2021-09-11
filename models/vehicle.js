@@ -26,25 +26,13 @@ const vehicleSchema = new Schema(
     image: {
       type: "String",
     },
-    fuel_usage: {
-      type: [
-        {
-          updatedAt: {
-            type: String,
-          },
-          month: {
-            type: "Number",
-          },
-          year: {
-            type: "Number",
-          },
-          usage: {
-            type: "Number",
-          },
-        },
-      ],
-      default: [],
-    },
+    fuel_usage: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "FuelUsage",
+        default: [],
+      },
+    ],
     last_service_date: {
       type: "Date",
     },
