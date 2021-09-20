@@ -27,7 +27,7 @@ const vehicleQueries = {
   },
   vehicleById: async (_, args, context) => {
     try {
-      const vehicle = Vehicle.findById(args.vehicleId);
+      const vehicle = Vehicle.findById(args.vehicleId).populate(["fuel_usage"]);
       return vehicle;
     } catch (error) {
       throw new ApolloError(error);
