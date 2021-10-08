@@ -172,9 +172,13 @@ const vehicleMutation = {
         usage: usage,
       });
 
-      await Vehicle.findByIdAndUpdate(vehicleId, {
+      const vehicleUpdate = await Vehicle.findByIdAndUpdate(vehicleId, {
         $push: { fuel_usage: newFuelUsage },
       });
+
+      if (!vehicleUpdate) {
+        throw new ApolloError("Vehicle doesn't exists!");
+      }
 
       const result = newFuelUsage.save();
       await pubsub.publish("FUEL_USAGE_CREATED", {
